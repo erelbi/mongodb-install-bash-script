@@ -1,5 +1,19 @@
 # -*- mode: ruby -*
 # vi: set ft=ruby :
+require 'getoptlong'
+
+opts = GetoptLong.new(
+  [ '--custom-option', GetoptLong::OPTIONAL_ARGUMENT ]
+)
+
+customParameter=''
+
+opts.each do |opt, arg|
+  case opt
+    when '--custom-option'
+      customParameter=arg
+  end
+end
 ## Farklı ortamlar için hazırlanacak
 # if OS.windows?
 #     puts "Vagrant launched from windows."
@@ -13,7 +27,7 @@
 #     puts "Vagrant launched from unknown platform."
 # end
 Vagrant.configure("2") do |config|
-   config.vm.box = "generic/ubuntu2004"
+   config.vm.box = "generic/#{customParameter}"
    config.vm.provision "shell", path: "mongodb-install.sh"  
    #config.vm.provision "shell", path: "mongodb-run.sh", run: "always"
    config.vm.network "forwarded_port", guest: 27017, host: 27017
