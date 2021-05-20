@@ -16,5 +16,5 @@ done
 # ReplicaSeti Başlatır
 for i in "${MONGODB_CONF_FILES[@]}"
 do
-  mongod --config "$INSTALL_DIR/MongoDB/$i" --fork
+  mongod --config "$INSTALL_DIR/mongo/conf/$i" --fork
 done

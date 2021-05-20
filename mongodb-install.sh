@@ -10,6 +10,7 @@ REPO_FEDORA=/etc/yum.repos.d/mongodb-org-4.4.repo
 
 create_dir(){
   mkdir -p "$INSTALL_DIR/mongo/db"
+  chmod  770 "$INSTALL_DIR/mongo/db"
   mkdir -p "$INSTALL_DIR/mongo/logs"
   mkdir -p "$INSTALL_DIR/mongo/conf"
   mkdir -p "$INSTALL_DIR/db"
@@ -77,7 +78,7 @@ configuration_data(){
     " > "$INSTALL_DIR/mongo/conf/$i.conf"
     ITER=$(expr $ITER + 1)
     done
-
+    chown -R mongodb:mongodb  "$INSTALL_DIR"
 
     
 }
