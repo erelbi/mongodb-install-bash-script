@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
    ### only ubuntu2004 and fedora
 
    #config.vm.box = "generic/ubuntu2004"
-   config.vm.box = "generic/fedora"
+   config.vm.box = "generic/fedora31"
    config.vm.provision "shell", path: "mongodb-install.sh"  
    #config.vm.provision "shell", path: "mongodb-run.sh", run: "always"
    config.vm.network "forwarded_port", guest: 27017, host: 27017
