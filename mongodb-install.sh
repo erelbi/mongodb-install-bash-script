@@ -26,15 +26,15 @@ setup_mongodb(){
   then
    echo "install mongodb for fedora31"
    cat <<EOF > $REPO_FEDORA
-  [mongodb-4.2]
-  name=MongoDB Repository
-  baseurl=https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.2/x86_64/
-  gpgcheck=1
-  enabled=1
-  gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
-  EOF
+[mongodb-4.2]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.2/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
+EOF
    yum update && yum install -y mongodb-org mongodb-org-tools mongodb-org-shell
-
+   chown -R mongod:mongod  "$INSTALL_DIR"
    
 
   elif [[ $1 = ubuntu ]]
@@ -43,15 +43,17 @@ setup_mongodb(){
   curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc |  apt-key add - &&
   echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" |  tee /etc/apt/sources.list.d/mongodb-org-4.4.list
   apt update && apt install -y mongodb-org
+  chown -R mongodb:mongodb  "$INSTALL_DIR"
   else
   echo "Not Found Operation System"
   exit 1
   fi
+  
 }
 
 
 configuration_data(){
-   chown -R mongodb:mongodb  "$INSTALL_DIR"
+   
 
     for i in "${MONGODB_CONF_FILES[@]}"
     do	
@@ -79,17 +81,34 @@ configuration_data(){
     " > "$INSTALL_DIR/mongo/conf/$i.conf"
     ITER=$(expr $ITER + 1)
     done
-    chown -R mongodb:mongodb  "$INSTALL_DIR"
+    
 
     
 }
 
 
 start_server(){
-        for i in "${MONGODB_CONF_FILES[@]}"
-        do
-          mongod --config "$INSTALL_DIR/mongo/conf/$i" --fork
-        done
+        if [[ $1 = fedora ]]
+        then
+          chown -R mongod:mongod  "$INSTALL_DIR"
+          firewall-cmd --add-port=27017/tcp --permanent
+          firewall-cmd --reload
+          for i in "${MONGODB_CONF_FILES[@]}"
+          do
+            mongod --config "$INSTALL_DIR/mongo/conf/$i" --fork
+          done
+        elif [[ $1 = ubuntu ]]
+        then
+           chown -R mongodb:mongodb  "$INSTALL_DIR"
+           for i in "${MONGODB_CONF_FILES[@]}"
+          do
+            mongod --config "$INSTALL_DIR/mongo/conf/$i" --fork
+          done
+        else
+          exit 1
+        fi
+
+
 }
 
 
@@ -143,7 +162,7 @@ mongo --port 27017 admin --eval 'db.auth("'"$MONGODB_ROOT_USER"'", "'"$MONGODB_R
 create_dir
 setup_mongodb $OS
 configuration_data
-start_server
+start_server $OS
 create_mongo_user
 openssl_create_key
 mongo_reconfigure
