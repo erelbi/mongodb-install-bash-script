@@ -15,7 +15,7 @@
 Vagrant.configure("2") do |config|
    config.vm.box = "generic/ubuntu2004"
    config.vm.provision "shell", path: "mongodb-install.sh"  
-   config.vm.provision "shell", path: "mongodb-run.sh", run: "always"
+   #config.vm.provision "shell", path: "mongodb-run.sh", run: "always"
    config.vm.network "forwarded_port", guest: 27017, host: 27017
    config.vm.network "forwarded_port", guest: 27018, host: 27018
    config.vm.network "forwarded_port", guest: 27019, host: 27019
@@ -36,8 +36,8 @@ Vagrant.configure("2") do |config|
    config.vm.provider :libvirt do |kvm|
     kvm.memory = 4096
     kvm.cpus = 2
-    kvm.volume_cache = 'none'
-    kvm.storage_pool_name = 'vagrant-mongodb'
+    # kvm.volume_cache = 'none'
+    # kvm.storage_pool_name = 'vagrant-mongodb'
    end
 
 end
