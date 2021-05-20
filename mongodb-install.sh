@@ -6,7 +6,7 @@ MONGODB_ROOT_USER="db_root"
 MONGODB_ROOT_PASSWORD="password"
 ID=$(egrep '^(ID)=' /etc/os-release)
 OS=${ID:3}
-REPO_FEDORA=/etc/yum.repos.d/mongodb-org-4.4.repo
+REPO_FEDORA=/etc/yum.repos.d/mongodb-org-4.2.repo
 
 create_dir(){
   mkdir -p "$INSTALL_DIR/mongo/db"
@@ -24,13 +24,14 @@ setup_mongodb(){
 
   if [[ $1 = fedora ]]
   then
-   echo "install mongodb"
+   echo "install mongodb for fedora31"
    cat <<EOF > $REPO_FEDORA
-      name=MongoDB Repository
-      baseurl=https://repo.mongodb.org/yum/redhat/8Server/mongodb-org/4.4/x86_64/
-      gpgcheck=0
-      enabled=1
-      gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
+  [mongodb-4.2]
+  name=MongoDB Repository
+  baseurl=https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.2/x86_64/
+  gpgcheck=1
+  enabled=1
+  gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
 EOF
    yum update && yum install -y mongodb-org mongodb-org-tools mongodb-org-shell
 
@@ -38,7 +39,7 @@ EOF
 
   elif [[ $1 = ubuntu ]]
   then
-  echo "install mongodb"
+  echo "install mongodb ubuntu20.04"
   curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc |  apt-key add - &&
   echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" |  tee /etc/apt/sources.list.d/mongodb-org-4.4.list
   apt update && apt install -y mongodb-org
