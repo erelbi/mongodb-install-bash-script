@@ -26,12 +26,12 @@ setup_mongodb(){
   then
    echo "install mongodb for fedora31"
    cat <<EOF > $REPO_FEDORA
-  [mongodb-4.2]
-  name=MongoDB Repository
-  baseurl=https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.2/x86_64/
-  gpgcheck=1
-  enabled=1
-  gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
+[mongodb-4.2]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.2/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
 EOF
    yum update && yum install -y mongodb-org mongodb-org-tools mongodb-org-shell
 
