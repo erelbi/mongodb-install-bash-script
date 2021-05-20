@@ -42,7 +42,7 @@ EOF
   echo "install mongodb ubuntu20.04"
   curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc |  apt-key add - &&
   echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" |  tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-  apt update && apt install -y mongodb-org
+  apt update && apt install -y mongodb
   chown -R mongodb:mongodb  "$INSTALL_DIR"
   else
   echo "Not Found Operation System"
