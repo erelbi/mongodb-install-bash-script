@@ -99,6 +99,7 @@ start_server(){
           done
         elif [[ $1 = ubuntu ]]
         then
+           chmod 777 "$INSTALL_DIR"/db
            chown -R mongodb:mongodb  "$INSTALL_DIR"
            for i in "${MONGODB_CONF_FILES[@]}"
           do
